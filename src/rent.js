@@ -1,4 +1,4 @@
-// GET /api/rent?gu=11620&dong=10200&year=2024&chunk=0
+// GET /api/rent?gu=11620&dong=10200&year=2024&chunk=0  (src/index.js 에서 호출)
 //
 // 서울 열린데이터광장 tbLnOpendataRentV 프록시.
 // API 키는 Cloudflare 환경변수(SEOUL_API_KEY)에서만 읽고, 응답·에러 메시지·로그 어디에도 넣지 않는다.
@@ -20,8 +20,7 @@ const GU_CODES = new Set([
 ]);
 const USAGES = ["아파트", "오피스텔", "연립다세대", "단독다가구"];
 
-export async function onRequestGet(context) {
-  const { request, env, waitUntil } = context;
+export async function handleRent(request, env, ctx) {
   const url = new URL(request.url);
 
   // 다른 사이트에서 브라우저로 이 프록시를 호출하지 못하게 막는다.
@@ -64,7 +63,7 @@ export async function onRequestGet(context) {
       // 확정된 과거 연도는 길게, 올해는 짧게 캐시
       "Cache-Control": `public, max-age=${year === YEARS.at(-1) ? 3600 : 86400}`,
     });
-    waitUntil(cache.put(cacheKey, response.clone()));
+    ctx.waitUntil(cache.put(cacheKey, response.clone()));
     return response;
   } catch (err) {
     // err.message에는 upstream URL(=키)이 들어갈 수 있으므로 내보내지도, 로그로 남기지도 않는다.
@@ -130,7 +129,7 @@ function num(v) {
   return Number.isFinite(n) && String(v ?? "").trim() !== "" ? n : null;
 }
 
-function json(body, status = 200, headers = {}) {
+export function json(body, status = 200, headers = {}) {
   return new Response(JSON.stringify(body), {
     status,
     headers: {

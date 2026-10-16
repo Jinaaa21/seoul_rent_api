@@ -1,10 +1,10 @@
 {
   "name": "seoul-rent",
   "private": true,
-  "description": "서울시·자치구·법정동별 2022~2026 전세가 변화 (Cloudflare Pages + Functions)",
+  "description": "서울시·자치구·법정동별 2022~2026 전세가 변화 (Cloudflare Workers + 정적 파일)",
   "scripts": {
-    "dev": "wrangler pages dev",
-    "deploy": "wrangler pages deploy"
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "wrangler": "^4.40.0"

@@ -1,0 +1,18 @@
+// Cloudflare Workers 설정. API 키는 여기에 쓰지 않는다.
+//   로컬: .dev.vars 의 SEOUL_API_KEY
+//   배포: 대시보드 > Worker > Settings > Variables and Secrets 에서 SEOUL_API_KEY 를 "Secret"으로 추가
+//         (또는 npx wrangler secret put SEOUL_API_KEY)
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "seoul-rent",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    // 없는 경로는 public/404.html 로 응답 (동별 과거 파일이 없는 동은 404 → 빈 자료로 처리)
+    "not_found_handling": "404-page",
+    // /api/* 는 정적 파일보다 Worker 가 먼저 받는다
+    "run_worker_first": ["/api/*"]
+  }
+}

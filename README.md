@@ -6,7 +6,7 @@
 - **자치구**: 지도에서 구를 누르면 그 구의 결과로 바뀝니다. 서울 전체를 비교선으로 함께 그립니다.
 - **법정동**: 구를 고른 뒤 동을 조회하면 그 동의 신고 자료를 모두 불러옵니다. 구를 비교선으로 함께 그립니다.
 
-Cloudflare Pages(정적 파일) + Pages Functions(API 프록시) 구조입니다.
+Cloudflare Workers 구조입니다. `public/` 정적 파일과, `/api/rent` 요청만 처리하는 Worker(`src/`)로 이루어져 있습니다.
 
 ## 구조
 
@@ -18,7 +18,9 @@ public/                     브라우저로 나가는 정적 파일 (API 키 없
   data/dongs.json           자치구-법정동 목록 (build_dongs.py)
   data/archive/*.json       2022·2023년 동별 원자료 (build_archive.py)
   _headers                  CSP 등 보안 헤더
-functions/api/rent.js       /api/rent 프록시 — 서버에서만 SEOUL_API_KEY 사용
+src/index.js                Worker 진입점 — /api/rent 는 프록시로, 나머지는 정적 파일로
+src/rent.js                 /api/rent 프록시 — 서버에서만 SEOUL_API_KEY 사용
+wrangler.jsonc              Workers 설정 (키는 넣지 않음)
 scripts/                    데이터 준비 스크립트 (아래 참고)
 raw/                        원본 zip·API 다운로드 (git 제외)
 .dev.vars                   로컬 개발용 키 (git 제외)
@@ -26,7 +28,7 @@ raw/                        원본 zip·API 다운로드 (git 제외)
 
 ## API 키 보안
 
-- 키는 브라우저 코드에 없습니다. 브라우저는 `/api/rent`만 호출하고, 서버(Pages Function)가 `env.SEOUL_API_KEY`로 열린데이터광장을 호출합니다.
+- 키는 브라우저 코드에 없습니다. 브라우저는 `/api/rent`만 호출하고, 서버(Worker)가 `env.SEOUL_API_KEY`로 열린데이터광장을 호출합니다.
 - 에러 응답과 로그에는 upstream URL(키 포함)을 넣지 않습니다.
 - 입력값은 화이트리스트로 검증합니다(자치구 코드 25개, 동 코드 5자리 숫자, API 연도 2024~2026).
 - 다른 사이트에서 브라우저로 프록시를 호출하면 `Sec-Fetch-Site: cross-site`로 걸러냅니다.
@@ -41,7 +43,7 @@ raw/                        원본 zip·API 다운로드 (git 제외)
 ```bash
 npm install
 cp .dev.vars.example .dev.vars   # SEOUL_API_KEY 입력 (이미 만들어져 있으면 생략)
-npm run dev                       # http://127.0.0.1:8788
+npm run dev                       # http://127.0.0.1:8787
 ```
 
 `?gu=11620`(자치구) 또는 `?gu=11620&dong=10200`(법정동)을 주소에 붙이면 바로 그 화면이 열립니다.

@@ -4,7 +4,7 @@
     python scripts/build_archive.py raw/seoul_rent_2022.zip raw/seoul_rent_2023.zip
 
 결과: public/data/archive/{자치구코드}_{법정동코드}.json
-      {"years": [2022, 2023], "rows": [[...], ...]}   (행 형식은 functions/api/rent.js 의 slim()과 같음)
+      {"years": [2022, 2023], "rows": [[...], ...]}   (행 형식은 src/rent.js 의 slim()과 같음)
 
 - 연도는 파일 안의 '접수년도' 기준으로 나눈다. 파일에 다른 연도 접수분이 섞여 있어도 접수년도가 같으면 같은 연도로 묶는다.
 - 여러 파일에 같은 접수년도의 같은 거래가 겹치면 한 번만 남긴다.

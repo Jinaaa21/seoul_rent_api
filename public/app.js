@@ -15,7 +15,7 @@ const MIN_DEALS_FOR_MAP = 30;   // 지도 색칠: 기준·최근 연도 모두 �
 // ColorBrewer PiYG (11단계): 분홍 = 하락, 가운데 = 0%, 초록 = 상승
 const PIYG = ["#8e0152", "#c51b7d", "#de77ae", "#f1b6da", "#fde0ef", "#f7f7f7", "#e6f5d0", "#b8e186", "#7fbc41", "#4d9221", "#276419"];
 
-// 동별 행 배열 인덱스 (functions/api/rent.js 의 slim() 과 같은 순서)
+// 동별 행 배열 인덱스 (src/rent.js 의 slim() 과 같은 순서)
 const DAY = 0, SE = 1, USG = 2, AREA = 3, DEP = 4, RENT = 5, FLR = 6, ARCH = 7, NEW = 8, NAME = 9;
 
 const $ = (id) => document.getElementById(id);
