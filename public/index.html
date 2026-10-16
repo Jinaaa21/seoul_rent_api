@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>서울 전세가 변화</title>
+  <meta name="description" content="서울 열린데이터광장 전월세가 정보로 서울시·자치구·법정동별 2022~2026년 전세 가격 변화를 살펴봅니다.">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2713%27 fill=%27%237fffd4%27 stroke=%27%2314a884%27 stroke-width=%272%27/%3E%3C/svg%3E">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>서울 전세가 변화</h1>
+      <p class="lede">2022~2026년 서울 전월세 신고 자료로 본 전세 보증금 흐름입니다.<br>지도에서 자치구를 누르면 그 구의 결과를, 동을 고르면 동별 결과를 볼 수 있습니다.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="toolbar">
+      <nav class="crumbs" id="crumbs" aria-label="현재 위치"></nav>
+      <div class="filters">
+        <div class="seg" id="usage" role="group" aria-label="주택 유형">
+          <button type="button" data-v="all" class="on">전체</button>
+          <button type="button" data-v="0">아파트</button>
+          <button type="button" data-v="1">오피스텔</button>
+          <button type="button" data-v="2">연립다세대</button>
+          <button type="button" data-v="3">단독다가구</button>
+        </div>
+        <div class="seg" id="metric" role="group" aria-label="지표">
+          <button type="button" data-v="deposit" class="on">보증금</button>
+          <button type="button" data-v="perM2">㎡당 보증금</button>
+        </div>
+      </div>
+    </div>
+
+    <section class="overview">
+      <article class="card map-card">
+        <div class="card-head">
+          <h3 id="map-title">자치구별 전세 보증금 변화율</h3>
+          <button type="button" id="reset" class="ghost" hidden>서울시 전체 보기</button>
+        </div>
+        <p class="muted small" id="map-note"></p>
+        <div id="map" class="map" aria-label="서울시 자치구 지도"></div>
+        <div class="legend" id="legend"></div>
+      </article>
+
+      <aside class="card panel">
+        <p class="eyebrow" id="place-kind">서울시</p>
+        <h2 id="place">서울시 전체</h2>
+        <div class="kpis" id="kpis"></div>
+
+        <form id="dong-form" class="dong-form" autocomplete="off" hidden>
+          <label for="dong">동별로 자세히 보기 <span class="muted">(법정동)</span></label>
+          <div class="dong-row">
+            <select id="dong" required><option value="">동 선택</option></select>
+            <button id="run" type="submit" class="primary" disabled>조회</button>
+          </div>
+        </form>
+        <p class="muted small" id="panel-note"></p>
+      </aside>
+    </section>
+
+    <section id="status" class="card status" hidden>
+      <div class="status-line">
+        <span id="status-text"></span>
+        <span id="status-count" class="muted"></span>
+      </div>
+      <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"><div id="bar-fill"></div></div>
+    </section>
+    <p id="error" class="card error" role="alert" hidden></p>
+
+    <article class="card">
+      <h3 id="chart-title">월별 전세 보증금 중위값</h3>
+      <p class="muted small" id="chart-note"></p>
+      <div class="chart-legend" id="chart-legend"></div>
+      <div id="chart" class="chart"></div>
+    </article>
+
+    <section class="two-col">
+      <article class="card">
+        <h3>연도별 요약 <span class="muted small">(계약일 기준 · 전세)</span></h3>
+        <div class="table-wrap"><table id="year-table"></table></div>
+        <p class="muted small" id="coverage-note"></p>
+      </article>
+
+      <article class="card">
+        <h3 id="usage-title">주택 유형별 중위 전세 보증금</h3>
+        <div class="table-wrap"><table id="usage-table"></table></div>
+      </article>
+    </section>
+
+    <article class="card" id="raw-card" hidden>
+      <div class="card-head">
+        <h3>최근 전세 거래 <span class="muted small" id="raw-count"></span></h3>
+        <button type="button" id="download" class="ghost">전체 자료 CSV 받기</button>
+      </div>
+      <div class="table-wrap"><table id="raw-table"></table></div>
+    </article>
+  </main>
+
+  <footer class="wrap muted small">
+    자료: 서울 열린데이터광장 「서울시 부동산 전월세가 정보」(OA-21276) — 2022·2023년은 연도별 파일, 2024년 이후는 OpenAPI(tbLnOpendataRentV).
+    서울시·자치구 집계는 <span id="updated"></span> 기준이며, 동별 결과는 조회할 때 새로 불러옵니다. 금액 단위는 만원, 동은 법정동 기준입니다.
+    경계: 행정동 경계(vuski/admdongkor, 2025.01.01)를 자치구로 합침.
+  </footer>
+
+  <div id="tip" class="tip" hidden></div>
+</body>
+</html>

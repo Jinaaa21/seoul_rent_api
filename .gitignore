@@ -1,0 +1,14 @@
+# 비밀 값 (절대 커밋 금지)
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+# 도구 산출물
+node_modules/
+.wrangler/
+__pycache__/
+
+# 열린데이터광장 원본 zip (용량이 커서 제외, scripts/build_archive.py 입력)
+raw/
